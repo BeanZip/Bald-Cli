@@ -9,7 +9,10 @@ struct Cli {
     section_command: String,
 }
 
-
+fn run(script: &str){
+ let com = Command::new("powershell").args(["/C",script]).output().expect("Failed to execute command");
+ println!("{}", String::from_utf8_lossy(&com.stdout));
+}
 
 
 fn setup(){
@@ -20,8 +23,9 @@ fn setup(){
         let mut script = "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
         Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression";
          println!("Beginning to Install Scoop.....");
-         let com = Command::new("powershell").args(["/C",script]).output().expect("Failed to execute command");
-         println!("{}", String::from_utf8_lossy(&com.stdout));
+         run(script);
+        
+
     } else if cfg!(unix){
         println!("System is a Unix-based OS (Linux or MacOS)");
     } else{
