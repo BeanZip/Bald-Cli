@@ -24,7 +24,10 @@ fn setup(){
         Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression";
          println!("Beginning to Install Scoop.....");
          run(script);
-        
+        println!("Setting up Neovim..");
+        script = "scoop install neovim";
+        run(script)
+        //TODO: Figure out how to get user path to install plugins and such.
 
     } else if cfg!(unix){
         println!("System is a Unix-based OS (Linux or MacOS)");
