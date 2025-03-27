@@ -1,7 +1,7 @@
 use clap::Parser;
 use std::process::Command;
 use std::io;
-// Search for a file pattern and display lines that it's contained in.
+
 #[derive(Parser, Debug)]
 #[command(name = "cli-tool")]
 struct Cli {
@@ -41,7 +41,7 @@ fn main() {
     let args = Cli::parse();
 
     match args.section.as_str() {
-        "first-sec" => match args.section_command.as_str() {
+        "bald" => match args.section_command.as_str() {
             "hello" => println!("Hello There"),
             "goodbye" => {
                 let output = Command::new("cmd")
