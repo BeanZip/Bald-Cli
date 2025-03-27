@@ -1,6 +1,6 @@
 use clap::Parser;
 use std::process::Command;
-
+use std::io;
 // Search for a file pattern and display lines that it's contained in.
 #[derive(Parser, Debug)]
 #[command(name = "cli-tool")]
@@ -22,11 +22,11 @@ fn setup(){
         println!("System is Windows");
         let mut script = "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
         Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression";
-         println!("Beginning to Install Scoop.....");
+     println!("Beginning to Install Scoop.....");
          run(script);
         println!("Setting up Neovim..");
         script = "scoop install neovim";
-        run(script)
+        run(script);
         //TODO: Figure out how to get user path to install plugins and such.
 
     } else if cfg!(unix){
@@ -52,6 +52,11 @@ fn main() {
             },
             "build-my-vim" => {
                 setup();
+            },
+            "code" =>{
+                println!("Insert Lang You want installed");
+               let mut input = String::new();
+                io::stdin().read_line(&mut input).expect("Variable Not Found");
             },
             _ => println!("Nothing There"),
         },
