@@ -61,6 +61,8 @@ thread::sleep(Duration::from_secs(2));
         },
         "rs" =>{
             println!("{} is being read...",input);
+            thread::sleep(Duration::from_secs(5));
+            run("scoop install rust");
         }
         _ => { println!("Compiler not made for {}",input.trim().to_lowercase()); }
     }
