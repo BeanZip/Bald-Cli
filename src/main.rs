@@ -1,6 +1,8 @@
 use clap::Parser;
 use std::process::Command;
 use std::io;
+use std::thread;
+use std::time::Duration;
 
 #[derive(Parser, Debug)]
 #[command(name = "cli-tool")]
@@ -9,9 +11,12 @@ struct Cli {
     section_command: String,
 }
 
-fn run(script: &str){
+fn run(script: &str) -> &str{
+ println!("Running script {}", script);
  let com = Command::new("powershell").args(["/C",script]).output().expect("Failed to execute command");
  println!("{}", String::from_utf8_lossy(&com.stdout));
+
+    return script;
 }
 
 
@@ -37,6 +42,20 @@ fn setup(){
     }
 
 }
+
+fn code_download(input: String){
+
+            thread::sleep(Duration::from_secs(2));
+ match input.as_str(){
+        "cpp" | "c" =>{
+           run("scoop install gcc");
+        },
+        "py" =>{
+           run("scoop install python");
+        },
+        _ => println!("Couldn't find compiler for {}",input)
+    } 
+}
 fn main() {
     let args = Cli::parse();
 
@@ -54,9 +73,10 @@ fn main() {
                 setup();
             },
             "code" =>{
-                println!("Insert Lang You want installed");
+                println!("Insert desired lang by file extension");
                let mut input = String::new();
                 io::stdin().read_line(&mut input).expect("Variable Not Found");
+                code_download(input);
             },
             _ => println!("Nothing There"),
         },
