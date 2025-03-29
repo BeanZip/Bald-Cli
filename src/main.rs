@@ -3,7 +3,7 @@ use std::process::Command;
 use std::io;
 use std::thread;
 use std::time::Duration;
-
+use std::env;
 #[derive(Parser, Debug)]
 #[command(name = "cli-tool")]
 struct Cli {
@@ -20,7 +20,7 @@ fn run(script: &str) -> &str{
 }
 
 
-fn setup(){
+fn setup() -> Result<(), std::env::VarError>{
     
   //TODO: Setup nvim installation 
    if cfg!(windows) {
@@ -32,14 +32,23 @@ fn setup(){
         println!("Setting up Neovim..");
         script = "scoop install neovim";
         run(script);
-        //TODO: Figure out how to get user path to install plugins and such.
+        let key = "USER_HOME";
+        let val = env::var(key)?;
+        match env::var(key){
+            Ok(val) => { 
+                println!("{}: Set as {:?}",key,val); 
 
+            },
+            Err(e) => println!("Couldn't interpret {} because of {}. Make sure to set {} properly",key,e,key), 
+        }
     } else if cfg!(unix){
         println!("System is a Unix-based OS (Linux or MacOS)");
     } else{
         println!("DAWG WHAT ARE YOU USING THIS ON A TOASTER!???");
         println!("Nah bro's on a {:?} ",std::env::consts::OS);
     }
+
+    Ok(())
 
 }
 
