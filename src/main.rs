@@ -15,7 +15,7 @@ fn run(script: &str) -> &str{
     println!("Running script {}", script);
     let com = Command::new("powershell").args(["/C",script]).output().expect("Failed to execute command");
     println!("{}", String::from_utf8_lossy(&com.stdout));
-    return script;
+    script
 }
 
 
@@ -28,17 +28,28 @@ fn setup() -> Result<(), std::env::VarError>{
         Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression";
      println!("Beginning to Install Scoop.....");
          run(script);
+        thread::sleep(Duration::from_secs(5));
         println!("Setting up Neovim..");
         script = "scoop install neovim";
         run(script);
-        let key = "USER_HOME";
+        thread::sleep(Duration::from_secs(5));
+        script = "scoop install git";
+        run(script);
+        let key = "USERPROFILE";
         let val = env::var(key)?;
         match env::var(key){
             Ok(val) => { println!("{}: Set as {:?}",key,val)},
             Err(e) => println!("Couldn't interpret {} because of {}. Make sure to set {} properly",key,e,key), 
         }
 
-        run(format!("cd {}",val).as_str());
+        run(format!(r"cd {}\AppData\Local\nvim",val).as_str());
+        println!("Inject NvChad? (y/n)");
+        let mut input = String::new();
+        io::stdin().read_line(&mut input).expect("Variable Not Found");
+
+
+        run("git clone https://github.com/NvChad/starter");
+
     } else if cfg!(unix){
         println!("System is a Unix-based OS (Linux or MacOS)");
     } else{
