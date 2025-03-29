@@ -12,10 +12,9 @@ struct Cli {
 }
 
 fn run(script: &str) -> &str{
- println!("Running script {}", script);
- let com = Command::new("powershell").args(["/C",script]).output().expect("Failed to execute command");
- println!("{}", String::from_utf8_lossy(&com.stdout));
-
+    println!("Running script {}", script);
+    let com = Command::new("powershell").args(["/C",script]).output().expect("Failed to execute command");
+    println!("{}", String::from_utf8_lossy(&com.stdout));
     return script;
 }
 
@@ -77,7 +76,6 @@ thread::sleep(Duration::from_secs(2));
 }
 fn main() {
     let args = Cli::parse();
-
     match args.section.as_str() {
         "bald" => match args.section_command.as_str() {
             "hello" => println!("Hello There"),
