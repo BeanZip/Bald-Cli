@@ -35,12 +35,11 @@ fn setup() -> Result<(), std::env::VarError>{
         let key = "USER_HOME";
         let val = env::var(key)?;
         match env::var(key){
-            Ok(val) => { 
-                println!("{}: Set as {:?}",key,val); 
-
-            },
+            Ok(val) => { println!("{}: Set as {:?}",key,val)},
             Err(e) => println!("Couldn't interpret {} because of {}. Make sure to set {} properly",key,e,key), 
         }
+
+        run(format!("cd {}",val).as_str());
     } else if cfg!(unix){
         println!("System is a Unix-based OS (Linux or MacOS)");
     } else{
@@ -86,7 +85,7 @@ fn main() {
                 run("shutdown /r /t 5 && echo your pc is going to sleep.....");
             },
             "build-my-vim" => {
-                setup();
+                let _ = setup();            
             },
             "code" =>{
                 println!("Insert desired lang by file extension");
