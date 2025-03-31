@@ -1,4 +1,5 @@
 use clap::Parser;
+
 use std::process::Command;
 use std::io;
 use std::thread;
@@ -47,9 +48,12 @@ fn setup() -> Result<(), std::env::VarError>{
         let mut input = String::new();
         io::stdin().read_line(&mut input).expect("Variable Not Found");
 
+        match input.as_str(){
+          "y" => { run("git clone https://github.com/NvChad/starter"); }
+          "n" => println!("Stopping value"),
 
-        run("git clone https://github.com/NvChad/starter");
-
+          _ => println!("invalid response")
+        }
     } else if cfg!(unix){
         println!("System is a Unix-based OS (Linux or MacOS)");
     } else{
