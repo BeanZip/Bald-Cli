@@ -1,10 +1,11 @@
 use clap::Parser;
-
 use std::process::Command;
 use std::io;
 use std::thread;
 use std::time::Duration;
 use std::env;
+use third_rust_app::api::get_joke;
+
 #[derive(Parser, Debug)]
 #[command(name = "cli-tool")]
 struct Cli {
@@ -56,6 +57,7 @@ fn setup() -> Result<(), std::env::VarError>{
         }
     } else if cfg!(unix){
         println!("System is a Unix-based OS (Linux or MacOS)");
+
     } else{
         println!("DAWG WHAT ARE YOU USING THIS ON A TOASTER!???");
         println!("Nah bro's on a {:?} ",std::env::consts::OS);
@@ -85,11 +87,17 @@ thread::sleep(Duration::from_secs(2));
             println!("{} is being read...",input);
             thread::sleep(Duration::from_secs(5));
             run("scoop install rust");
+        },
+        "cs" =>{
+            println!("{} is being read...",input);
+            thread::sleep(Duration::from_secs(5));
+            run("scoop install dotnet");
         }
         _ => { println!("Compiler not made for {}",input.trim().to_lowercase()); }
     }
 }
-fn main() {
+#[tokio::main]
+async fn main() {
     let args = Cli::parse();
     match args.section.as_str() {
         "bald" => match args.section_command.as_str() {
@@ -106,6 +114,12 @@ fn main() {
                let mut input = String::new();
                 io::stdin().read_line(&mut input).expect("Variable Not Found");
                 code_download(input);
+            },
+            "joke" =>{
+                match get_joke().await{
+                    Ok(joke) => println!("{}",joke),
+                    Err(e) => println!("Error Getting The Joke: {}",e),
+                }
             },
             _ => println!("Nothing There"),
         },
